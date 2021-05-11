@@ -31,13 +31,20 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if ne .Values.vault.role "" }}
+          args:
+            - --vault.kubernetes-role={{ .Values.vault.role }}
+            - --vault.auth-method=kubernetes
+          {{- end }}
           env:
           - name: VAULT_SKIP_VERIFY
             value: "{{ .Values.vault.skip_ssl_verify }}"
+          {{- if eq .Values.vault.role "" }}
           - name: VAULT_ROLE_ID
             value: "{{ .Values.vault.role_id }}"
           - name: VAULT_SECRET_ID
             value: "{{ .Values.vault.secret_id }}"
+          {{- end }}
           - name: VAULT_ADDR
             value: "{{ .Values.vault.address }}"
           resources:

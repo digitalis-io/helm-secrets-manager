@@ -26,6 +26,7 @@ vault:
   role_id: ""
   secret_id: ""
   skip_ssl_verify: "true"
+  role: ""
 
 
 podSecurityContext: {}
